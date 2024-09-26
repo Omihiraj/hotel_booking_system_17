@@ -12,7 +12,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Discover Screen"),
+        child: Text("This is Discover Super Screen"),
       ),
     );
   }
