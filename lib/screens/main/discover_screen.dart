@@ -5,7 +5,7 @@ import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/utils/app_colors.dart';
 import 'package:provider/provider.dart';
 
-import '../models/hotel.dart';
+import '../../models/hotel.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
