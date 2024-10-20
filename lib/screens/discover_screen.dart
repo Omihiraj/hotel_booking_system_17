@@ -1,7 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/utils/app_colors.dart';
+import 'package:provider/provider.dart';
+
+import '../models/hotel.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -141,83 +145,91 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           const Text("The Most Relavant"),
           SizedBox(
             height: 350,
-            child: ListView.builder(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          color: AppColors.primaryColor),
-                      width: 300,
-                      height: 250,
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
+            child: Consumer<HotelProvider>(builder: (context, hotels, child) {
+              print(hotels.hotelsData);
+              List<Hotel> allHotelData = hotels.hotelsData;
+              return hotels.hotelsData.isEmpty
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemCount: allHotelData.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Container(
+                            decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40),
-                                child: Image.network(
-                                    "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-                              ),
-                              Positioned(
-                                top: 20,
-                                right: 30,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(35),
-                                      color: const Color.fromARGB(87, 0, 0, 0)),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.favorite_outline,
-                                      color: AppColors.primaryColor,
+                                color: AppColors.primaryColor),
+                            width: 300,
+                            height: 250,
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: Image.network(
+                                          allHotelData[index].mainImage!),
                                     ),
+                                    Positioned(
+                                      top: 20,
+                                      right: 30,
+                                      child: Container(
+                                        width: 35,
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(35),
+                                            color: const Color.fromARGB(
+                                                87, 0, 0, 0)),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.favorite_outline,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(allHotelData[index].title!),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star),
+                                          Text("${allHotelData[index].rating}")
+                                        ],
+                                      )
+                                    ],
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Tiny Home in Roelingen"),
-                                Row(
-                                  children: [
-                                    Icon(Icons.star),
-                                    Text("4.96(217)")
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: List.generate(
+                                        allHotelData[index].amenities!.length,
+                                        (findex) => FacilityItem(
+                                          facilityName: allHotelData[index]
+                                              .amenities![findex],
+                                        ),
+                                      )),
                                 )
                               ],
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FacilityItem(
-                                  facilityName: "4 gests",
-                                ),
-                                FacilityItem(
-                                  facilityName: "2 bedrooms",
-                                ),
-                                FacilityItem(
-                                  facilityName: "2 bathrooms",
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+                        );
+                      });
+            }),
           )
         ],
       ),
