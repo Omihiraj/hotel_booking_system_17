@@ -29,4 +29,20 @@ class FirebaseServices {
 
     return hotels;
   }
+
+  static addSignUpData(
+      {required String email,
+      required String name,
+      required String address,
+      required String mobileNo}) {
+    CollectionReference userCollectionReference =
+        FirebaseFirestore.instance.collection("users");
+
+    userCollectionReference.add({
+      "email": email,
+      "name": name,
+      "address": address,
+      "mobile_number": mobileNo
+    });
+  }
 }

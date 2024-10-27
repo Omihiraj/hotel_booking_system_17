@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/services/firebase_auth_service.dart';
 import 'package:hotel_booking_app/utils/validation/validation.dart';
 
 import '../../widgets/custom_button.dart';
@@ -13,7 +14,15 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController nameFieldController = TextEditingController();
+  TextEditingController emailFieldController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController mobileNumberFieldController = TextEditingController();
+  TextEditingController addressFieldController = TextEditingController();
   String? nameErrorText;
+  String? emailErrorText;
+  String? passwordErrorText;
+  String? mobileNumberErrorText;
+  String? addressErrorText;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,25 +42,35 @@ class _SignUpState extends State<SignUp> {
           controller: nameFieldController,
           errorText: nameErrorText,
         ),
-        const CustomTextField(
+        CustomTextField(
           textFieldName: "Address",
+          controller: addressFieldController,
+          errorText: addressErrorText,
         ),
-        const CustomTextField(
+        CustomTextField(
           textFieldName: "E-Mail",
+          controller: emailFieldController,
+          errorText: emailErrorText,
         ),
-        const CustomTextField(
+        CustomTextField(
           textFieldName: "Mobile Number",
+          controller: mobileNumberFieldController,
+          errorText: mobileNumberErrorText,
         ),
-        const CustomTextField(
+        CustomTextField(
           textFieldName: "Password",
+          controller: passwordController,
+          errorText: passwordErrorText,
         ),
         CustomButton(
           btnText: "SignUp",
           onTap: () {
-            setState(() {
-              nameErrorText = Validation.nameValidator(
-                  nameFieldValue: nameFieldController.text.toString());
-            });
+            FirebaseAuthService.signUp(
+                email: emailFieldController.text.trim(),
+                password: passwordController.text.trim(),
+                address: addressFieldController.text.trim(),
+                mobileNo: mobileNumberFieldController.text.trim(),
+                name: nameFieldController.text.trim());
           },
         )
       ],

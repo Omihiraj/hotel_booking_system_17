@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/utils/app_colors.dart';
@@ -64,9 +65,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             )
                           ],
                         ),
-                        Icon(
-                          Icons.person,
-                          color: AppColors.primaryColor,
+                        InkWell(
+                          onTap: () {
+                            signOut();
+                          },
+                          child: Icon(
+                            Icons.logout,
+                            color: AppColors.primaryColor,
+                          ),
                         )
                       ],
                     ),
@@ -234,6 +240,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         ],
       ),
     );
+  }
+
+  Future signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }
 

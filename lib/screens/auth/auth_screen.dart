@@ -11,7 +11,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool isSignInPage = false;
+  bool isSignInPage = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
