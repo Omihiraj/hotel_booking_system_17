@@ -1,10 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
+import 'package:hotel_booking_app/screens/search_results_screen.dart';
 import 'package:hotel_booking_app/utils/app_colors.dart';
 import 'package:provider/provider.dart';
-
 import '../models/hotel.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -88,6 +87,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         setState(() {
                           isPressed = !isPressed;
                         });
+                        int selectedIndex = 0;
+                        SearchResultsScreen()
+                            .botttomSheet(context, selectedIndex);
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),

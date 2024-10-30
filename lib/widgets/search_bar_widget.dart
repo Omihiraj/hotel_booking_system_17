@@ -1,65 +1,65 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'package:hotel_booking_app/utils/app_colors.dart';
+import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({
-    super.key,
-  });
+class SearchBarWidget extends StatefulWidget {
+  final String mainText;
+  final String secondaryText;
+  final Color seachBarColor;
+  final Color textColor;
+  const SearchBarWidget(
+      {super.key,
+      required this.mainText,
+      required this.secondaryText,
+      required this.seachBarColor,
+      required this.textColor});
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
-class _SearchBarState extends State<SearchBar> {
-  bool isPressed = false;
-
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  bool isPressed =  false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        setState(() {
-          isPressed = !isPressed;
-        });
-      },
+      onTap: () {},
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-                color: Colors.grey.shade600.withOpacity(0.2),
+                color: widget.seachBarColor,
                 borderRadius: BorderRadius.circular(50)),
             child: Row(
               children: [
                 Icon(
                   Icons.search,
-                  color: AppColors.primaryColor,
+                  color: widget.textColor,
                 ),
                 const SizedBox(
-                  width: 15,
+                  width: 10,
                 ),
-                // isPressed
-                //     ? const SizedBox(width: 250, height: 30, child: TextField())
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Serach Places",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    Text(
-                      "Date Range and Number of geusts",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
+                isPressed
+                    ? const SizedBox(width: 250, height: 30, child: TextField())
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.mainText,
+                            style: TextStyle(
+                                color: widget.textColor, fontSize: 13),
+                          ),
+                          Text(
+                            widget.secondaryText,
+                            style: TextStyle(
+                                color: widget.textColor.withOpacity(0.5),
+                                fontSize: 11),
+                          )
+                        ],
+                      )
               ],
             ),
           ),
