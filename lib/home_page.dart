@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/main.dart';
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/screens/booking_screen.dart';
+import 'package:hotel_booking_app/screens/bookingconfirm_scrren.dart';
 import 'package:hotel_booking_app/screens/discover_screen.dart';
 import 'package:hotel_booking_app/screens/favourite_screen.dart';
 import 'package:hotel_booking_app/screens/message_screen.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> screenList = const [
     DiscoverScreen(),
     FavouriteScreen(),
-    BookingScreen(),
+    Confirmpage(),
     MessageScreen(),
   ];
 
