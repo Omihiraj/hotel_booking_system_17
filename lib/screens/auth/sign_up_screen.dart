@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/services/firebase_auth_service.dart';
-import 'package:hotel_booking_app/utils/validation/validation.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';

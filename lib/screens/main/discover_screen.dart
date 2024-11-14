@@ -3,7 +3,10 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
+
 import 'package:hotel_booking_app/utils/app_colors.dart';
+
+import 'package:hotel_booking_app/widgets/hotel_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/hotel.dart';
@@ -152,7 +155,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           SizedBox(
             height: 350,
             child: Consumer<HotelProvider>(builder: (context, hotels, child) {
-              print(hotels.hotelsData);
               List<Hotel> allHotelData = hotels.hotelsData;
               return hotels.hotelsData.isEmpty
                   ? const Center(
@@ -162,78 +164,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       itemCount: allHotelData.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                color: AppColors.primaryColor),
-                            width: 300,
-                            height: 250,
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: Image.network(
-                                          allHotelData[index].mainImage!),
-                                    ),
-                                    Positioned(
-                                      top: 20,
-                                      right: 30,
-                                      child: Container(
-                                        width: 35,
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(35),
-                                            color: const Color.fromARGB(
-                                                87, 0, 0, 0)),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.favorite_outline,
-                                            color: AppColors.primaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(allHotelData[index].title!),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.star),
-                                          Text("${allHotelData[index].rating}")
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: List.generate(
-                                        allHotelData[index].amenities!.length,
-                                        (findex) => FacilityItem(
-                                          facilityName: allHotelData[index]
-                                              .amenities![findex],
-                                        ),
-                                      )),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
+                        return HotelCard(
+                            hotelData: allHotelData[index],
+                            favoriteHotel: false);
                       });
             }),
           )
@@ -244,28 +177,5 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Future signOut() async {
     await FirebaseAuth.instance.signOut();
-  }
-}
-
-class FacilityItem extends StatelessWidget {
-  const FacilityItem({super.key, required this.facilityName});
-
-  final String facilityName;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 5,
-          height: 5,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5), color: Colors.black),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(facilityName)
-      ],
-    );
   }
 }

@@ -1,4 +1,5 @@
 class Hotel {
+  String? id;
   String? title;
   num? rating;
   Map<String, dynamic>? prices;
@@ -7,6 +8,7 @@ class Hotel {
   List<dynamic>? amenities;
 
   Hotel({
+    this.id,
     this.title,
     this.rating,
     this.prices,

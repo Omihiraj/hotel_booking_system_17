@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_booking_app/main.dart';
+
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/screens/main/booking_screen.dart';
 import 'package:hotel_booking_app/screens/main/discover_screen.dart';
@@ -26,8 +26,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    FirebaseServices.getCurrentUserFavouriteHotels().then((val) {
+      context.read<HotelProvider>().addFovouriteHotelIds(favoriteHotelIds: val);
+    });
 
     FirebaseServices.getHotels().then((hotelsData) {
       context.read<HotelProvider>().addHotels(hotels: hotelsData);
@@ -77,7 +80,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           screenNo = index;
         });
-        print(screenNo);
       },
       child: Column(
         children: [
