@@ -1,9 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hotel_booking_app/models/booking.dart';
 import 'package:hotel_booking_app/models/hotel.dart';
+import 'package:hotel_booking_app/providers/booking_provider.dart';
+import 'package:hotel_booking_app/services/payment_gateway_service/payment_gateway.dart';
 import 'package:hotel_booking_app/utils/app_colors.dart';
+import 'package:hotel_booking_app/widgets/custom_button.dart';
 import 'package:hotel_booking_app/widgets/facility_item.dart';
+import 'package:hotel_booking_app/widgets/hotel_booking_date_picker.dart';
+import 'package:hotel_booking_app/widgets/price_card.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/hotel_provider.dart';
@@ -153,21 +161,38 @@ class _HotelCardState extends State<HotelCard> {
   }
 
   hotelDetailBottomSheet({required Hotel hotel}) {
+    List<PriceCard> priceCardList = [];
+    int hotelTypeIndex = 0;
+    hotel.prices!.forEach(
+      (key, value) {
+        priceCardList.add(
+          PriceCard(
+            priceName: key,
+            price: value.toString(),
+            index: hotelTypeIndex,
+          ),
+        );
+        hotelTypeIndex++;
+      },
+    );
+
     showModalBottomSheet(
-        backgroundColor: Colors.white,
-        elevation: 8.0,
-        context: context,
-        builder: (context) {
-          return Container(
-            width: double.infinity,
-            height: 1200,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
+      backgroundColor: Colors.white,
+      elevation: 8.0,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          height: 700,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
+          ),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -221,10 +246,111 @@ class _HotelCardState extends State<HotelCard> {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
                   child: Divider(),
+                ),
+                SizedBox(
+                  height: 48,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: hotel.amenities!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Text(
+                            hotel.amenities![index],
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 240,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: priceCardList.length,
+                    itemBuilder: (context, index) {
+                      return priceCardList[index];
+                    },
+                  ),
+                ),
+                const HotekBookingDatePicker(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Price : ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                      Text(
+                        "${context.watch<BookingProvider>().totalPrice} \$",
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: CustomButton(
+                    btnText: "BOOK",
+                    onTap: () {
+                      // FirebaseServices.addABooking(
+                      //   Booking(
+                      //     bookingType:
+                      //         context.read<BookingProvider>().bookingHotelType,
+                      //     price:
+                      //         context.read<BookingProvider>().bookingHotelPrice,
+                      //     checkingDate:
+                      //         context.read<BookingProvider>().checkingDate,
+                      //     checkoutDate:
+                      //         context.read<BookingProvider>().checkoutDate,
+                      //     hotelId: hotel.id,
+                      //     userId: FirebaseAuth.instance.currentUser!.email,
+                      //     paymentStatus: false,
+                      //   ),
+                      // );
+
+                      PaymentGateway.initPaymentSheet(
+                        amount: context
+                            .read<BookingProvider>()
+                            .totalPrice
+                            .substring(
+                                0,
+                                context
+                                        .read<BookingProvider>()
+                                        .totalPrice
+                                        .length -
+                                    2),
+                      ).then((val) async {
+                        await Stripe.instance.presentPaymentSheet();
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
                 )
               ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

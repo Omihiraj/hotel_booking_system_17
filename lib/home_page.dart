@@ -5,6 +5,7 @@ import 'package:hotel_booking_app/screens/main/booking_screen.dart';
 import 'package:hotel_booking_app/screens/main/discover_screen.dart';
 import 'package:hotel_booking_app/screens/main/favourite_screen.dart';
 import 'package:hotel_booking_app/screens/main/message_screen.dart';
+import 'package:hotel_booking_app/services/firebase_notification_service.dart';
 import 'package:hotel_booking_app/services/firebase_services.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    FirebaseNotificationService.initNotification();
 
     FirebaseServices.getCurrentUserFavouriteHotels().then((val) {
       context.read<HotelProvider>().addFovouriteHotelIds(favoriteHotelIds: val);
@@ -62,8 +65,8 @@ class _HomePageState extends State<HomePage> {
                 bottomNavigationIcon(
                     icon: Icons.shopping_bag, iconText: "Booking", index: 2),
                 bottomNavigationIcon(
-                    icon: Icons.ac_unit_outlined,
-                    iconText: "Messages",
+                    icon: Icons.notifications,
+                    iconText: "Notifications",
                     index: 3),
               ],
             ),

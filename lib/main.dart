@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:hotel_booking_app/constants/keys.dart';
 import 'package:hotel_booking_app/home_page.dart';
+import 'package:hotel_booking_app/providers/booking_provider.dart';
 
 import 'package:hotel_booking_app/providers/hotel_provider.dart';
 import 'package:hotel_booking_app/screens/auth/auth_screen.dart';
@@ -10,11 +13,13 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = publishableKey;
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => HotelProvider()),
+        ChangeNotifierProvider(create: (context) => BookingProvider()),
       ],
       child: const MyApp(),
     ),

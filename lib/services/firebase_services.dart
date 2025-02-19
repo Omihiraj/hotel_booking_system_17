@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/models/booking.dart';
 
 import 'package:hotel_booking_app/models/hotel.dart';
+import 'package:hotel_booking_app/models/notification.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/hotel_provider.dart';
@@ -127,5 +129,22 @@ class FirebaseServices {
           .read<HotelProvider>()
           .removeFavouriteHotelId(hotelId: removedItemId);
     });
+  }
+
+  static addABooking(Booking booking) async {
+    final collectionReference =
+        FirebaseFirestore.instance.collection("bookings");
+
+    var documentReference = await collectionReference.add(
+      {
+        "hotel-id": booking.hotelId,
+        "booking-type": booking.bookingType,
+        "checking-date": booking.checkingDate,
+        "checkout-date": booking.checkoutDate,
+        "price": booking.price,
+        "user-id": booking.userId,
+        "payment-status": booking.paymentStatus,
+      },
+    );
   }
 }

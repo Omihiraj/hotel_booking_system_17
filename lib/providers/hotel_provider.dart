@@ -8,6 +8,8 @@ class HotelProvider extends ChangeNotifier {
 
   final List<Hotel> _favoriteHotelList = [];
 
+  int seletedHotelTypeIndex = 0;
+
   addHotels({required List<Hotel> hotels}) {
     _hotels = hotels;
     notifyListeners();
@@ -38,7 +40,13 @@ class HotelProvider extends ChangeNotifier {
     }
   }
 
+  updateSeletedHotelTypeIndex(int index) {
+    seletedHotelTypeIndex = index;
+    notifyListeners();
+  }
+
   List<Hotel> get hotelsData => _hotels;
   List<dynamic> get favouriteHotelIds => _favoriteHotelIds;
   List<Hotel> get favouriteHotels => _favoriteHotelList;
+  int get index => seletedHotelTypeIndex;
 }
